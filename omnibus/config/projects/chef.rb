@@ -1,5 +1,5 @@
 #
-# Copyright 2012-2016, Chef Software, Inc.
+# Copyright 2012-2017, Chef Software Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ else
   install_dir "#{default_root}/#{name}"
 end
 
+override :chef, version: "local_source"
+
 # Load dynamically updated overrides
 overrides_path = File.expand_path("../../../../omnibus_overrides.rb", current_file)
 instance_eval(IO.read(overrides_path), overrides_path)
@@ -47,9 +49,7 @@ override :"ruby-windows-devkit", version: "4.5.2-20111229-1559" if windows? && w
 
 dependency "preparation"
 
-# All actual dependencies are in chef-complete, so that the addition
-# or removal of a dependency doesn't dirty the entire project file
-dependency "chef-complete"
+dependency "chef"
 
 package :rpm do
   signing_passphrase ENV["OMNIBUS_RPM_SIGNING_PASSPHRASE"]

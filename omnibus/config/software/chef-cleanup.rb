@@ -9,10 +9,6 @@ source path: project.files_path
 dependency "chef"
 
 build do
-  # This is where we get the definitions below
-  require_relative "../../files/chef/build-chef"
-  extend BuildChef
-
   # Clear the now-unnecessary git caches, cached gems, and git-checked-out gems
   block "Delete bundler git cache and git installs" do
     gemdir = shellout!("#{gem_bin} environment gemdir", env: env).stdout.chomp
