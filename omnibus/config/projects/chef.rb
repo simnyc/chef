@@ -48,6 +48,7 @@ instance_eval(IO.read(overrides_path), overrides_path)
 override :"ruby-windows-devkit", version: "4.5.2-20111229-1559" if windows? && windows_arch_i386?
 
 dependency "preparation"
+dependency "pry"
 dependency "chef"
 
 # FIXME?: might make sense to move dependencies below into the omnibus-software chef
