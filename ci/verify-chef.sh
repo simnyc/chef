@@ -116,10 +116,6 @@ else
   cd /opt/$PROJECT_NAME
   CHEF_GEM=`bundle show chef`
   cd $CHEF_GEM
-  if [ ! -f "Gemfile.lock" ]; then
-    echo "Chef gem does not contain a Gemfile.lock! This is needed to run any tests."
-    exit 1
-  fi
 
-  sudo env BUNDLE_GEMFILE=/opt/$PROJECT_NAME/Gemfile BUNDLE_IGNORE_CONFIG=true BUNDLE_FROZEN=1 PATH=$PATH TERM=xterm bundle exec rspec -r rspec_junit_formatter -f RspecJunitFormatter -o $WORKSPACE/test.xml -f documentation spec/functional
+  sudo bundle exec rspec -r rspec_junit_formatter -f RspecJunitFormatter -o $WORKSPACE/test.xml -f documentation spec/functional
 fi
