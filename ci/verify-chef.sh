@@ -83,14 +83,17 @@ $EMBEDDED_BIN_DIR/rspec --version
 FORCE_FFI_YAJL=ext
 export FORCE_FFI_YAJL
 
+OLD_PATH=$PATH
+PATH=/opt/$PROJECT_NAME/bin:/opt/$PROJECT_NAME/embedded/bin:$PATH
+
+gem_list=`gem which chef`
+lib_dir=`dirname $gem_list`
+CHEF_GEM=`dirname $lib_dir`
+
 # ACCEPTANCE environment variable will be set on acceptance testers.
 # If is it set; we run the acceptance tests, otherwise run rspec tests.
 if [ "x$ACCEPTANCE" != "x" ]; then
   # Find the Chef gem and cd there.
-  OLD_PATH=$PATH
-  PATH=/opt/$PROJECT_NAME/bin:/opt/$PROJECT_NAME/embedded/bin:$PATH
-  cd /opt/$PROJECT_NAME
-  CHEF_GEM=`bundle show chef`
   PATH=$OLD_PATH
 
   # On acceptance testers we have Chef DK. We will use its Ruby environment
@@ -109,12 +112,6 @@ if [ "x$ACCEPTANCE" != "x" ]; then
   env PATH=$PATH AWS_SSH_KEY_ID=$AWS_SSH_KEY_ID bundle install --deployment
   env PATH=$PATH AWS_SSH_KEY_ID=$AWS_SSH_KEY_ID KITCHEN_DRIVER=ec2 KITCHEN_CHEF_CHANNEL=unstable bundle exec chef-acceptance test --force-destroy --data-path $WORKSPACE/chef-acceptance-data
 else
-  PATH=/opt/$PROJECT_NAME/bin:/opt/$PROJECT_NAME/embedded/bin:$PATH
-  export PATH
-
-  # Test against the installed Chef gem
-  cd /opt/$PROJECT_NAME
-  CHEF_GEM=`bundle show chef`
   cd $CHEF_GEM
 
   sudo bundle exec rspec -r rspec_junit_formatter -f RspecJunitFormatter -o $WORKSPACE/test.xml -f documentation spec/functional
