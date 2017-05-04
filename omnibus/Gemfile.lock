@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/chef/omnibus
-  revision: c5c917eead2bd76e0f34afc8ceeebb115e1e1e45
+  revision: 4d0ce784e0cbf799c5c2e7283a31de9f3bc0ac76
   branch: lcg/debugging
   specs:
     omnibus (5.5.0)
