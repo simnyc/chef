@@ -8,8 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/chef/omnibus
-  revision: 4d0ce784e0cbf799c5c2e7283a31de9f3bc0ac76
-  branch: lcg/debugging
+  revision: ffbda9ad7d37ddb485342505ff4407c6ff23d95f
   specs:
     omnibus (5.5.0)
       aws-sdk (~> 2)
