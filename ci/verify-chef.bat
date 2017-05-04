@@ -46,8 +46,12 @@ call %EMBEDDED_BIN_DIR%\rspec --version
 
 SET PATH=C:\opscode\%PROJECT_NAME%\bin;C:\opscode\%PROJECT_NAME%\embedded\bin;%PATH%
 
-REM ; Test against the vendored chef gem (cd into the output of "bundle show chef")
-for /f "delims=" %%a in ('bundle show chef') do cd %%a
+
+REM ; Test against the vendored chef gem (cd into the output of "gem which chef")
+for /f "delims=" %%a in ('gem which chef') do set CHEFDIR=%%a
+call :dirname "%CHEFDIR%" CHEFDIR
+call :dirname "%CHEFDIR%" CHEFDIR
+cd %CHEFDIR%
 
 IF NOT EXIST "Gemfile.lock" (
   ECHO "Chef gem does not contain a Gemfile.lock! This is needed to run any tests."
@@ -62,3 +66,12 @@ REM ; ffi-yajl must run in c-extension mode for perf, so force it so we don't ac
 set FORCE_FFI_YAJL=ext
 
 call bundle exec rspec -r rspec_junit_formatter -f RspecJunitFormatter -o %WORKSPACE%\test.xml -f documentation spec/functional
+
+GOTO :EOF
+
+:dirname file varName
+    setlocal ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+    SET _dir=%~dp1
+    SET _dir=%_dir:~0,-1%
+    endlocal & set %2=%_dir%
+GOTO :EOF
