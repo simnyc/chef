@@ -48,7 +48,6 @@ instance_eval(IO.read(overrides_path), overrides_path)
 override :"ruby-windows-devkit", version: "4.5.2-20111229-1559" if windows? && windows_arch_i386?
 
 dependency "preparation"
-dependency "pry"
 dependency "chef"
 
 # FIXME?: might make sense to move dependencies below into the omnibus-software chef
@@ -58,6 +57,7 @@ dependency "shebang-cleanup"
 dependency "version-manifest"
 dependency "openssl-customization"
 
+# devkit needs to come dead last these days so we do not use it to compile any gems
 if windows?
   dependency "ruby-windows-devkit"
   dependency "ruby-windows-devkit-bash"
