@@ -304,6 +304,7 @@ class Chef::Application::Client < Chef::Application
     :boolean        => false
 
   IMMEDIATE_RUN_SIGNAL = "1".freeze
+  RECONFIGURE_SIGNAL = "H".freeze
 
   attr_reader :chef_client_json
 
@@ -415,7 +416,7 @@ class Chef::Application::Client < Chef::Application
 
       trap("HUP") do
         Chef::Log.info("SIGHUP received, reconfiguring")
-        $reconfigure = true
+        SELF_PIPE[1].putc(RECONFIGURE_SIGNAL) # wakeup master process from select
       end
     end
   end
@@ -443,7 +444,6 @@ class Chef::Application::Client < Chef::Application
   private
 
   def interval_run_chef_client
-    reconfigure if $reconfigure
     if Chef::Config[:daemonize]
       Chef::Daemon.daemonize("chef-client")
 
@@ -460,11 +460,12 @@ class Chef::Application::Client < Chef::Application
   end
 
   def sleep_then_run_chef_client(sleep_sec)
-    @signal = test_signal
-    unless @signal == IMMEDIATE_RUN_SIGNAL
-      Chef::Log.debug("Sleeping for #{sleep_sec} seconds")
-      interval_sleep(sleep_sec)
-    end
+    Chef::Log.debug("Sleeping for #{sleep_sec} seconds")
+
+    # interval_sleep will return early on non-Windows if we received a signal
+    interval_sleep(sleep_sec)
+
+    reconfigure if @signal == RECONFIGURE_SIGNAL
     @signal = nil
 
     run_chef_client(Chef::Config[:specific_recipes])
@@ -480,7 +481,7 @@ class Chef::Application::Client < Chef::Application
     Chef::Application.fatal!("#{e.class}: #{e.message}", e)
   end
 
-  def test_signal
+  def check_for_signal
     @signal = interval_sleep(0)
   end
 
@@ -491,18 +492,15 @@ class Chef::Application::Client < Chef::Application
     duration
   end
 
+  # On non-Windows platforms we use an IO timeout to mimic sleep, so we can watch a pipe for signals setup in #setup_signal_handlers
   def interval_sleep(sec)
     unless SELF_PIPE.empty?
-      client_sleep(sec)
+      return unless IO.select([ SELF_PIPE[0] ], nil, nil, sec)
+      @signal = SELF_PIPE[0].getc.chr
     else
       # Windows
       sleep(sec)
     end
-  end
-
-  def client_sleep(sec)
-    return unless IO.select([ SELF_PIPE[0] ], nil, nil, sec)
-    @signal = SELF_PIPE[0].getc.chr
   end
 
   def unforked_interval_error_message
