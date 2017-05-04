@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "omnibus", git: "https://github.com/chef/omnibus"
+gem "omnibus", git: "https://github.com/chef/omnibus", branch: "lcg/debugging"
 gem "omnibus-software", git: "https://github.com/chef/omnibus-software", branch: "lcg/ruby-shadow-group"
 gem "license_scout", git: "https://github.com/chef/license_scout"
 
