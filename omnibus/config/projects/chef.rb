@@ -45,8 +45,6 @@ override :chef, version: "local_source"
 overrides_path = File.expand_path("../../../../omnibus_overrides.rb", current_file)
 instance_eval(IO.read(overrides_path), overrides_path)
 
-override :"ruby-windows-devkit", version: "4.5.2-20111229-1559" if windows? && windows_arch_i386?
-
 dependency "preparation"
 dependency "chef"
 
@@ -59,8 +57,9 @@ dependency "openssl-customization"
 
 # devkit needs to come dead last these days so we do not use it to compile any gems
 if windows?
-#  dependency "ruby-windows-devkit"
-#  dependency "ruby-windows-devkit-bash"
+  override :"ruby-windows-devkit", version: "4.5.2-20111229-1559" if windows_arch_i386?
+  dependency "ruby-windows-devkit"
+  dependency "ruby-windows-devkit-bash"
 end
 
 package :rpm do
