@@ -59,8 +59,8 @@ dependency "openssl-customization"
 
 # devkit needs to come dead last these days so we do not use it to compile any gems
 if windows?
-  dependency "ruby-windows-devkit"
-  dependency "ruby-windows-devkit-bash"
+#  dependency "ruby-windows-devkit"
+#  dependency "ruby-windows-devkit-bash"
 end
 
 package :rpm do
