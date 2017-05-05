@@ -36,6 +36,8 @@ FOR %%b IN (
   ECHO.
 )
 
+cd C:\
+
 call chef-client --version
 
 REM ; Exercise various packaged tools to validate binstub shebangs
@@ -45,7 +47,6 @@ call %EMBEDDED_BIN_DIR%\bundle --version
 call %EMBEDDED_BIN_DIR%\rspec --version
 
 SET PATH=C:\opscode\%PROJECT_NAME%\bin;C:\opscode\%PROJECT_NAME%\embedded\bin;%PATH%
-
 
 REM ; Test against the vendored chef gem (cd into the output of "gem which chef")
 for /f "delims=" %%a in ('gem which chef') do set CHEFDIR=%%a
