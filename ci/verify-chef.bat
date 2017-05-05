@@ -51,8 +51,6 @@ FOR %%b IN (
   ECHO.
 )
 
-cd C:\
-
 call chef-client --version
 
 REM ; Exercise various packaged tools to validate binstub shebangs
@@ -68,6 +66,10 @@ for /f "delims=" %%a in ('gem which chef') do set CHEFDIR=%%a
 call :dirname "%CHEFDIR%" CHEFDIR
 call :dirname "%CHEFDIR%" CHEFDIR
 cd %CHEFDIR%
+
+cd
+
+type Gemfile.lock
 
 IF NOT EXIST "Gemfile.lock" (
   ECHO "Chef gem does not contain a Gemfile.lock! This is needed to run any tests."
