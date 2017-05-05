@@ -30,6 +30,7 @@ set RUBYOPT=
 set RUBY_ENGINE=
 set RUBY_ROOT=
 set RUBY_VERSION=
+set BUNDLER_VERSION=
 set
 
 FOR %%b IN (
