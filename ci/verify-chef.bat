@@ -18,6 +18,20 @@ SET TMP=%TMP%\cheftest
 RMDIR /S /Q %TEMP%
 MKDIR %TEMP%
 
+REM ; FIXME: we should really use Bundler.with_clean_env in the caller instead of re-inventing it here
+set _ORIGINAL_GEM_PATH=
+set BUNDLE_BIN_PATH=
+set BUNDLE_GEMFILE=
+set GEM_HOME=
+set GEM_PATH=
+set GEM_ROOT=
+set RUBYLIB=
+set RUBYOPT=
+set RUBY_ENGINE=
+set RUBY_ROOT=
+set RUBY_VERSION=
+set
+
 FOR %%b IN (
   chef-client
   knife
