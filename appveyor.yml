@@ -37,6 +37,7 @@ install:
   - SET BUNDLE_WITHOUT=guard:maintenance:tools:integration:ci:docgen:travis:style:omnibus_package:aix:bsd:linux:mac_os_x:solaris
   - appveyor DownloadFile http://curl.haxx.se/ca/cacert.pem -FileName C:\cacert.pem
   - set SSL_CERT_FILE=C:\cacert.pem
+  - bundle env
 
 build_script:
   - bundle install || bundle install || bundle install
